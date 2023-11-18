@@ -10,6 +10,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { UserContextProvider } from './context/userContext.jsx';
+import { AddProduct } from './pages/addProduct/addProduct.jsx';
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: 'imagenes',
         element: <Images />
+      },
+      {
+        path: 'productos/nuevo',
+        element: <AddProduct />
       }
     ]
   },

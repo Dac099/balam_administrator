@@ -5,6 +5,7 @@ export const SideBar = () => {
   const activeStyle = 'text-pink-700 bg-pink-300';
   const defaultStyle = 'text-3xl grid place-content-center rounded-lg';
 
+
   return (
     <aside className="h-screen w-14 absolute top-0 left-0">
       <nav className="h-full">
@@ -13,7 +14,9 @@ export const SideBar = () => {
           <li className="mb-5">
             <NavLink
               to={'/'}
-              className={({isActive}) => `${defaultStyle} ${isActive ? activeStyle : ''}`}
+              className={({isActive}) => {
+                return `${defaultStyle} ${isActive  ? activeStyle : ''}`;
+              }}
             >
               <CiDesktop />
             </NavLink>

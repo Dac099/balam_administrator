@@ -1,18 +1,20 @@
 import { Products } from "./pages/products/products";
 import { useLocation, Outlet, useNavigate } from "react-router-dom";
 import { SideBar } from "./components/sideBard";
-import { useContext, useEffect } from "react";
-import { UserContext } from "./context/userContext";
+import { isUserSignedIn } from "./utils/checkSession";
+import { useEffect } from "react";
 
 export const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { userData: {session} } = useContext(UserContext);
 
   useEffect(() => {
-    if(!session){
-      navigate('/inicio');
+    const fetchData = async() => {
+      const res = await isUserSignedIn();
+      if(res === false) navigate('/inicio');
     }
+
+    fetchData();
   }, []);
 
   return (

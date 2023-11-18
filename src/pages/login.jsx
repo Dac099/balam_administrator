@@ -3,10 +3,11 @@ import { supabase } from '../supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useContext } from 'react';
 import { UserContext } from '../context/userContext';
+import { isUserSignedIn } from '../utils/checkSession';
 
 export const Login = () => {
   const navigate = useNavigate();
-  const { userData: user, setUserData } = useContext(UserContext);
+  const { setUserData } = useContext(UserContext);
 
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
@@ -15,10 +16,13 @@ export const Login = () => {
   const containerStyle = 'flex flex-col gap-1';
 
   useEffect(() => {
-    console.log(user)
-    if(user !== undefined && user.session !== undefined && user.session !== null){
-      navigate('/');
+    const fetchData = async() => {
+      const res = await isUserSignedIn();
+
+      if(res.user) navigate('/');
     }
+
+    fetchData();
   }, []);
 
 
@@ -32,7 +36,7 @@ export const Login = () => {
 
     const { data, error } = await supabase.auth.signInWithPassword({email,password});
     if(!error){
-      console.log(data);
+      setUserData(data.user);
       navigate('/');
     }else{
       console.log(error);
@@ -46,7 +50,7 @@ export const Login = () => {
       <p className='text-3xl font-bold text-pink-500'>Inicia sesión</p>
 
       <form 
-        className='border-2 p-3 rounded-md shadow-md w-1/3 min-w-[300px]'
+        className='border-2 p-3 rounded-md shadow-md w-1/3 min-w-[300px] max-w-sm'
         onSubmit={e => handleSubmit(e)}
       >
 
