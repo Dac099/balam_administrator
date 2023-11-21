@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { CiShop, CiDesktop } from "react-icons/ci";
+import { IoExitOutline } from "react-icons/io5";
 
 export const SideBar = () => {
   const activeStyle = 'text-pink-700 bg-pink-300';
@@ -8,7 +9,7 @@ export const SideBar = () => {
 
   return (
     <aside className="h-screen w-14 absolute top-0 left-0">
-      <nav className="h-full">
+      <nav className="h-full relative">
         <ul className="p-2 border-2 bg-neutral-100 h-full w-full">
 
           <li className="mb-5">
@@ -32,6 +33,16 @@ export const SideBar = () => {
           </li>
 
         </ul>
+
+        <li className="absolute list-none z-10 bottom-3 left-1/3">
+          <button
+            type="button"
+            className="text-2xl grid place-content-center"
+          >
+            <IoExitOutline />
+          </button>
+        </li>
+
       </nav>
     </aside>
   );
