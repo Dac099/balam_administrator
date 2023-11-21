@@ -1,11 +1,12 @@
-import { useImageStorage } from "../../hooks/useImageStorage";
+import { useProductTable } from "../../hooks/useProductTable";
 import { useState } from "react";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const AddProduct = () => {
+  const navigate = useNavigate();
   const labelStyle = 'block font-semibold';
   const inputStyle = 'border-2 outline-pink-500 w-full h-10 rounded-md p-1';
-  const { uploadError, uploadImage, uploadImageUlr } = useImageStorage();
+  const { uploadNewProduct } = useProductTable();
   const [ selectedImage, setSelectedImage ] = useState(null);
   const [ imagePreview, setImagePreview ] = useState(null);
   const [ name, setName ] = useState('');
@@ -16,7 +17,6 @@ export const AddProduct = () => {
     const file = e.target.files[0];
 
     if(file){
-      console.log(file.type, file.name)
       setSelectedImage(file);
       getImagePreview(file);
     }
@@ -40,14 +40,8 @@ export const AddProduct = () => {
       return;
     }
 
-    const imageType = selectedImage.type.split('/')[1];
-    const imageName = name.trim().split(' ').join('_');
-    const imagePath = `images/${imageName}.${imageType}`;
-
-    await uploadImage(selectedImage, imagePath, 'products');
-
-    console.log(uploadImageUlr);
-
+    await uploadNewProduct(selectedImage, name, price, description);
+    navigate('/');
   }
 
   return (
@@ -118,7 +112,7 @@ export const AddProduct = () => {
 
         </div>
 
-        <section className={`border-2 p-2 mt-4 rounded-md ${imagePreview ? 'grid grid-cols-2': ''}`}>
+        <section className={`border-2 p-2 mt-4 rounded-md ${imagePreview ? 'grid grid-cols-2 gap-1': ''}`}>
           <div>
 
             <label 
@@ -142,7 +136,7 @@ export const AddProduct = () => {
             {imagePreview && 
               <img 
                 src={imagePreview} 
-                className=''
+                className='rounded-md'
               />
             }
 

@@ -21,7 +21,7 @@ export const App = () => {
     <main>
       <SideBar />
       <section className="ml-16 py-3">
-        {location.pathname === '/'
+        {location.pathname === '/' 
           ? <Products />
           : <Outlet />
         }

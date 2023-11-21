@@ -12,13 +12,13 @@ export const useImageStorage = () => {
       .from(bucket)
       .upload(path, file, {
         cacheControl: '3600',
-        upsert: false
+        upsert: true
       });
 
       if(error){
         setUploadError(error.message);
       }else{
-        console.log(data);
+        setUploadImageUrl(data.path);
       }
     } catch (error) {
       setUploadError(error.message);

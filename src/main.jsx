@@ -11,6 +11,7 @@ import {
 } from 'react-router-dom';
 import { UserContextProvider } from './context/userContext.jsx';
 import { AddProduct } from './pages/addProduct/addProduct.jsx';
+import { deleteProduct } from './pages/deleteProduct/action.js';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,14 @@ const router = createBrowserRouter([
       {
         path: 'productos/nuevo',
         element: <AddProduct />
+      },
+      {
+        path: 'productos/:product_id/editar',
+        element: <AddProduct />
+      },
+      {
+        path: 'productos/:product_id/eliminar',
+        action: deleteProduct,
       }
     ]
   },
