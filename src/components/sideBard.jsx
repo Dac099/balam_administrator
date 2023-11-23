@@ -6,9 +6,8 @@ export const SideBar = () => {
   const activeStyle = 'text-pink-700 bg-pink-300';
   const defaultStyle = 'text-3xl grid place-content-center rounded-lg';
 
-
   return (
-    <aside className="h-screen w-14 absolute top-0 left-0">
+    <aside className='h-screen w-14 fixed top-0 left-0'>
       <nav className="h-full relative">
         <ul className="p-2 border-2 bg-neutral-100 h-full w-full">
 

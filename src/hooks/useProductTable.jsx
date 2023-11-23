@@ -8,9 +8,10 @@ export const useProductTable = () => {
 
   const uploadNewProduct = async(imageFile, name, price, description) => {
     const imageType = imageFile.type.split('/')[1];
+    const path = `images/${name}.${imageType}`;
 
-    await uploadImage(imageFile, `images/${name}.${imageType}`, 'products');
-    const { data:res } = supabase.storage.from('products').getPublicUrl(`images/${name}.${imageType}`);
+    await uploadImage(imageFile, path, 'products');
+    const { data:res } = supabase.storage.from('products').getPublicUrl(path);
 
     if(uploadError) console.log(uploadError);
 
@@ -20,7 +21,8 @@ export const useProductTable = () => {
       name, 
       description,
       price,
-      url_img: res.publicUrl
+      url_img: res.publicUrl,
+      path_img: path
     });
 
     if(error){

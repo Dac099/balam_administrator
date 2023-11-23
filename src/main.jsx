@@ -1,7 +1,7 @@
 import './index.css';
 import ReactDOM from 'react-dom/client';
 import { App } from './App.jsx';
-import { Images } from './pages/images.jsx';
+import { Images } from './pages/images/images.jsx';
 import { getProducts } from './pages/products/loader.js';
 import { ErrorContainer } from './components/errorContainer.jsx';
 import { Login } from './pages/login.jsx';
@@ -12,6 +12,7 @@ import {
 import { UserContextProvider } from './context/userContext.jsx';
 import { AddProduct } from './pages/addProduct/addProduct.jsx';
 import { deleteProduct } from './pages/deleteProduct/action.js';
+import { getImages } from './pages/images/loader.js';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'imagenes',
+        loader: getImages,
         element: <Images />
       },
       {

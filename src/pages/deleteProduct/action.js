@@ -5,16 +5,15 @@ export const deleteProduct = async({params}) => {
 
   const { data, error } = await supabase
   .from('products')
-  .select('url_img')
+  .select('path_img')
   .eq('id', params.product_id);
 
   if(error) console.log(error);
 
-  const image_path = data[0].url_img.split('products')[1].split('%20').join(' ');
-  const { data: resStorage,error: errorStorage } = await supabase
+  const { error: errorStorage } = await supabase
   .storage
   .from('products')
-  .remove([image_path]);
+  .remove(data[0].path_img);
 
   if(errorStorage) console.log(errorStorage);
 
@@ -25,5 +24,6 @@ export const deleteProduct = async({params}) => {
 
   if(errorDelete) console.log(errorDelete);
 
+  window.location = '/';
   return redirect('/');
 }

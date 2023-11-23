@@ -41,7 +41,7 @@ export const AddProduct = () => {
     }
 
     await uploadNewProduct(selectedImage, name, price, description);
-    navigate('/');
+    window.location = '/';
   }
 
   return (
