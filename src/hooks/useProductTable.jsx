@@ -7,11 +7,7 @@ export const useProductTable = () => {
   const [ productError, setProductError ] = useState(null);
 
   const uploadNewProduct = async(imageFile, name, price, description) => {
-    const imageType = imageFile.type.split('/')[1];
-    const path = `images/${name}.${imageType}`;
-
-    await uploadImage(imageFile, path, 'products');
-    const { data:res } = supabase.storage.from('products').getPublicUrl(path);
+    const res = await setAndUpImage(imageFile, name);
 
     if(uploadError) console.log(uploadError);
 
@@ -22,7 +18,7 @@ export const useProductTable = () => {
       description,
       price,
       url_img: res.publicUrl,
-      path_img: path
+      path_img: res.path
     });
 
     if(error){
@@ -30,5 +26,31 @@ export const useProductTable = () => {
     }
   }
 
-  return { productError, uploadNewProduct }
+  const updateProduct = async(newProductData, id, name, imageFile) => {
+    if(imageFile){
+      const res = await setAndUpImage(imageFile, name);
+      newProductData.url_img = res.publicUrl;
+      newProductData.path = res.path;
+      console.log(newProductData)
+    }
+
+    const { error } = await supabase
+    .from('products')
+    .update(newProductData)
+    .eq('id', id);
+
+    if(error) setProductError(error.message);
+  }
+
+  const setAndUpImage = async(file, name) => {
+    const imageType = file.type.split('/')[1];
+    const path = `images/${name}.${imageType}`;
+
+    await uploadImage(file, path, 'products');
+    const { data:res } = supabase.storage.from('products').getPublicUrl(path);
+
+    return {publicUrl: res.publicUrl, path};
+  }
+
+  return { productError, uploadNewProduct, updateProduct }
 }

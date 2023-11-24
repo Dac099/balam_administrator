@@ -13,6 +13,8 @@ import { UserContextProvider } from './context/userContext.jsx';
 import { AddProduct } from './pages/addProduct/addProduct.jsx';
 import { deleteProduct } from './pages/deleteProduct/action.js';
 import { getImages } from './pages/images/loader.js';
+import { getProductByID } from './pages/editProduct/loader.js';
+import { EditProduct } from './pages/editProduct/editProduct.jsx';
 
 const router = createBrowserRouter([
   {
@@ -32,7 +34,8 @@ const router = createBrowserRouter([
       },
       {
         path: 'productos/:product_id/editar',
-        element: <AddProduct />
+        loader: getProductByID,
+        element: <EditProduct />
       },
       {
         path: 'productos/:product_id/eliminar',

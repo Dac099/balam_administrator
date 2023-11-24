@@ -1,15 +1,17 @@
 import { useProductTable } from "../../hooks/useProductTable";
 import { useState } from "react";
+import { useLoaderData, Link } from "react-router-dom";
 
-export const AddProduct = () => {
+export const EditProduct = () => {
+  const [product] = useLoaderData();
   const labelStyle = 'block font-semibold';
   const inputStyle = 'border-2 outline-pink-500 w-full h-10 rounded-md p-1';
-  const { uploadNewProduct } = useProductTable();
+  const { updateProduct } = useProductTable();
   const [ selectedImage, setSelectedImage ] = useState(null);
-  const [ imagePreview, setImagePreview ] = useState(null);
-  const [ name, setName ] = useState('');
-  const [ description, setDescription ] = useState('');
-  const [ price, setPrice ] = useState(0);
+  const [ imagePreview, setImagePreview ] = useState(product.url_img || null);
+  const [ name, setName ] = useState(product.name || '');
+  const [ description, setDescription ] = useState(product.description || '');
+  const [ price, setPrice ] = useState(product.price || 0);
 
   const handleChange = (e) => {
     const file = e.target.files[0];
@@ -32,13 +34,26 @@ export const AddProduct = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    const newProductData = { };
 
     if(name.length < 1 || description.length < 1 || price.valueOf() < 1){
       alert('Asegurate de llenar todos los campos');
       return;
     }
 
-    await uploadNewProduct(selectedImage, name, price, description);
+    if(product.name !== name){
+      newProductData.name = name;
+    }
+
+    if(product.description !== description){
+      newProductData.description = description;
+    }
+
+    if(product.price !== price){
+      newProductData.price = price;
+    }
+
+    await updateProduct(newProductData, product.id, name, selectedImage);
     window.location = '/';
   }
 
@@ -140,12 +155,24 @@ export const AddProduct = () => {
 
         </section>
 
-        <button 
-          type="submit"
-          className="block mx-auto h-10 w-1/2 mt-10 border-2 rounded-md bg-indigo-600 text-indigo-50 border-indigo-950"
-        >
-          Agregar
-        </button>
+        <section className="mt-10 grid grid-cols-2 h-10 gap-2">
+          <Link
+            to={'/'}
+            className="w-full h-full border-2 rounded-md bg-indigo-200 text-indigo-950 border-indigo-500 grid place-content-center font-semibold"
+          >
+            Cancelar
+          </Link>
+
+          <button 
+            type="submit"
+            className="w-full h-full border-2 rounded-md bg-indigo-600 text-indigo-50 border-indigo-950 font-semibold"
+          >
+            Agregar
+          </button>
+          
+          
+        </section>
+
 
       </form>
     </section>

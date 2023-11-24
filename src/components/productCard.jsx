@@ -5,7 +5,7 @@ export const ProductCard = ({product}) => {
   const [ showDeleteModal, setShowDeleteModal ] = useState(false);
 
   return (
-    <article className="border-2 border-violet-400 rounded-md w-72">
+    <article className="border-2 border-violet-400 rounded-md w-72 h-full">
       <section className="bg-violet-200/30 p-1 rounded-md">
         <img 
           src={product.url_img} 
@@ -45,6 +45,14 @@ export const ProductCard = ({product}) => {
             </p>
 
             <section className="h-10 grid grid-cols-2 mt-2">
+              
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="font-semibold text-sm text-violet-700 hover:bg-violet-200 rounded-md"
+              >
+                Cancelar
+              </button>
+
               <Form
                 method="post"
                 action={`productos/${product.id}/eliminar`}
@@ -58,13 +66,8 @@ export const ProductCard = ({product}) => {
                 </button>
               </Form>
 
-              <button
-                  onClick={() => setShowDeleteModal(false)}
-                  className="font-semibold text-sm text-violet-700 hover:bg-violet-200 rounded-md"
-                >
-                  Cancelar
-                </button>
             </section>
+
           </section>
         }
 
