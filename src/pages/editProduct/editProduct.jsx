@@ -53,9 +53,10 @@ export const EditProduct = () => {
       newProductData.price = price;
     }
 
-    await updateProduct(newProductData, product.id, name, selectedImage);
+    await updateProduct(newProductData, product.id, product.name, product.url_img ,selectedImage, product.path_img);
     window.location = '/';
   }
+
 
   return (
     <section className="h-[90vh] flex justify-center items-center">

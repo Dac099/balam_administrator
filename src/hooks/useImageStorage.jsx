@@ -11,7 +11,7 @@ export const useImageStorage = () => {
       .storage
       .from(bucket)
       .upload(path, file, {
-        cacheControl: '3600',
+        cacheControl: '0',
         upsert: true
       });
 

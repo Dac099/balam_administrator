@@ -9,8 +9,6 @@ export const Images = () => {
   const [ bannerURLs, setBannerURLs ] = useState([]);
   const [ empresaURLs, setEmpresaURLs ] = useState([]);
 
-  console.log(cards_data)
-
   useEffect(() => {
     setBannerURLs(banner_imgs.data.map(img => ({
       publicURL: supabase.storage.from('home_page').getPublicUrl(`banner/${img.name}`).data.publicUrl,

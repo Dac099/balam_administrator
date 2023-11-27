@@ -10,7 +10,7 @@ export const ProductCard = ({product}) => {
         <img 
           src={product.url_img} 
           alt={product.name} 
-          className="rounded-lg"
+          className="rounded-lg h-72 w-full object-cover"
         />
 
         <p className="text-center font-semibold text-lg text-violet-950">{product.name}</p>
@@ -23,7 +23,7 @@ export const ProductCard = ({product}) => {
       <section className="bg-violet-400 rounded-bl-sm rounded-br-sm">
         <section className="grid grid-cols-2 p-1">
           <button 
-            className="w-full h-10 grid place-content-center font-bold text-violet-100 rounded-md hover:text-violet-400 hover:bg-violet-100"
+            className="w-full h-10 grid place-content-center font-bold text-violet-100 rounded-md hover:text-violet-400 hover:bg-red-300"
             onClick={() => setShowDeleteModal(true)}
           >
             Eliminar

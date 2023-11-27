@@ -26,20 +26,71 @@ export const useProductTable = () => {
     }
   }
 
-  const updateProduct = async(newProductData, id, name, imageFile) => {
-    if(imageFile){
-      const res = await setAndUpImage(imageFile, name);
-      newProductData.url_img = res.publicUrl;
-      newProductData.path = res.path;
-      console.log(newProductData)
+  const updateProduct = async(productData, productID, prevName, prevURL ,imageFile, productPath) => {
+    // Si se actualiza la imágen, hay que cambiar el campo url_img con la nueva URL
+    if(productData.name){
+      // Si se actualiza el nombre, hay que cambiar el nombre del archivo en storage, el campo path, y el campo url_img
+      const { publicUrl, path } = await updatePathImage(prevName, prevURL, productData.name);
+      productData.url_img = publicUrl;
+      productData.path_img = path;
     }
 
-    const { error } = await supabase
-    .from('products')
-    .update(newProductData)
-    .eq('id', id);
+    if(imageFile){
+      // const { data: deleteRes, error: deleteError } = await supabase
+      // .storage
+      // .from('products')
+      // .remove([productPath]);
 
-    if(error) setProductError(error.message);
+      const { data: uploadRes, error: uploadError} = await supabase
+      .storage
+      .from('products')
+      .upload(productPath, imageFile, {
+        cacheControl: 0,
+        upsert: true
+      });
+
+
+      console.log(uploadRes, uploadError)
+
+      const { data: {publicUrl} } = supabase.storage.from('products').getPublicUrl(productPath);
+
+      console.log(publicUrl)
+
+      productData.url_img = publicUrl;
+    }
+
+    const { error: updateError } = await supabase
+    .from('products')
+    .update(productData)
+    .eq('id', productID);
+
+    if(updateError) console.log(updateError);
+  }
+
+  const updatePathImage = async(prevName, prevURL, newName) => {
+    const fileType = prevURL.split('.')[3];
+
+    //For update the path of an image: the prev image needs to be copied with the new path name and the previous image need to be removed
+
+    const { error: onCopyError } = await supabase
+    .storage
+    .from('products')
+    .copy(`images/${prevName}.${fileType}`, `images/${newName}.${fileType}`);
+    
+    if(onCopyError) console.log(onCopyError);
+
+    const { data: {publicUrl} } = supabase
+    .storage.from('products')
+    .getPublicUrl(`images/${newName}.${fileType}`);
+
+    const { error: onDeleteError } = await supabase
+    .storage
+    .from('products')
+    .remove([`images/${prevName}.${fileType}`]);
+
+    if(onDeleteError) console.log(onDeleteError);
+
+    return {publicUrl, path: `images/${newName}.${fileType}`};
   }
 
   const setAndUpImage = async(file, name) => {
