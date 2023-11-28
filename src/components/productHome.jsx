@@ -23,10 +23,9 @@ export const ProductHome = ({product}) => {
     e.preventDefault();
     const newProductData = {};
     const fileType = product.path_image.split('.')[1];
+    const newImgPath = `cards/${name}.${fileType}`;
     
-    if(name !== product.name){
-      const newImgPath = `cards/${name}.${fileType}`;
-
+    if(name !== product.name && !imageSelected){
       const { error: copyError } = await supabase
       .storage
       .from('home_page')
@@ -34,7 +33,7 @@ export const ProductHome = ({product}) => {
 
       if(copyError) console.log(copyError);
 
-      const { data: {publicURL} } = supabase
+      const { data } = supabase
       .storage
       .from('home_page')
       .getPublicUrl(newImgPath);
@@ -46,19 +45,14 @@ export const ProductHome = ({product}) => {
 
       if(onDeleteError) console.log(onDeleteError);
 
-      newProductData.url_image = publicURL;
+      console.log(data.publicUrl)
+
+      newProductData.url_image = data.publicUrl;
       newProductData.path_image = newImgPath;
       newProductData.name = name;
     }
 
-    if(imageSelected){
-      const { error: deleteError } = await supabase
-      .storage
-      .from('home_page')
-      .remove([product.path_image]);
-
-      if(deleteError) console.log(deleteError);
-
+    if(imageSelected && name === product.name){
       const { error: uploadError } = await supabase
       .storage
       .from('home_page')
@@ -67,13 +61,43 @@ export const ProductHome = ({product}) => {
         upsert: true
       });
 
-      if(updateError) console.log(uploadError);
+      if(uploadError) console.log(uploadError);
 
-      const { data: {publicURL} } = supabase.storage.from('home_page').getPublicUrl(product.path_image);
+      const { data: {publicUrl} } = supabase.storage.from('home_page').getPublicUrl(product.path_image);
 
-      newProductData.url_image = publicURL;
+      newProductData.url_image = publicUrl;
       newProductData.path_image = product.path_image;
+    }
 
+    if(imageSelected && name !== product.name){
+      const { error: deleteError } = await supabase
+      .storage
+      .from('home_page')
+      .remove([product.path]);
+
+      if(deleteError) console.log(deleteError);
+
+      const { error: uploadError } = await supabase
+      .storage
+      .from('home_page')
+      .upload(newImgPath, imageSelected, {
+        cacheControl: 0,
+        upsert: true
+      });
+
+      if(uploadError) {
+        console.log(uploadError);
+      }
+      
+      const { data: {publicUrl} } = supabase
+      .storage
+      .from('home_page')
+      .getPublicUrl(newImgPath);
+      
+
+      newProductData.name = name;
+      newProductData.path_image = newImgPath;
+      newProductData.url_image = publicUrl;
     }
 
     const { error: updateError } = await supabase
@@ -92,6 +116,7 @@ export const ProductHome = ({product}) => {
       <img 
         src={previewImg}
         alt={product.name} 
+        className="w-96 h-96 object-cover min-w-[280px] min-h-[280px]"
       />
 
       <form 
